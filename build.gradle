@@ -17,6 +17,11 @@ java {
 
 springBoot {
     mainClass = 'ru.rtln.notificationservice.NotificationServiceApplication'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
     maven {
         url "http://45.141.76.83:9091/repository/maven-snapshots/"
         allowInsecureProtocol = true
@@ -25,11 +30,6 @@ springBoot {
         url "http://localhost:9091/repository/maven-snapshots/"
         allowInsecureProtocol = true
     }
-}
-
-repositories {
-    mavenLocal()
-    mavenCentral()
 }
 
 ext {
