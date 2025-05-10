@@ -1,0 +1,96 @@
+server:
+  servlet:
+    context-path: /api/notification
+  port: ${SERVER_PORT:9107}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761}/eureka/
+    enabled: false
+
+
+internal:
+  api-key-header-name: ${SECRET_KEY_HEADER_NAME:Api-key}
+  service:
+    auth:
+      url: http://localhost:9101
+      secure-key: ES8p3QFFyPEdpnAdYCdDMPGxm4epBMWdEDLbNB8eSBHjxQmNsk2jjz7ATK2wUCEf
+    user:
+      url: ${USER_SERVICE_URL:http://localhost:9103}
+      secure-key: ${USER_SERVICE_SECRET_KEY:some-key-user}
+    notification:
+      secure-key: ${SECRET_KEY_NOTIFICATION_SERVICE:some-key-notification}
+
+settings:
+  project-name: Автоматизированная ферма
+  kafka:
+    topic:
+      system-event: ${KAFKA_SYSTEM_EVENT_TOPIC:system-event-topic}
+
+scheduler:
+  enabled:
+    notifications-send: false
+  cron:
+    notifications-send: ${SCHEDULER_NOTIFICATION_SEND_CRON:0 15 4 * * *}
+
+spring:
+  application:
+    name: notification
+  cloud:
+    config:
+      enabled: false
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/notification}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:postgres}
+  jpa:
+    open-in-view: false
+    properties.hibernate:
+      show_sql: true
+      format_sql: true
+      hbm2ddl.auto: validate
+  #    hibernate:
+  #      ddl-auto: create
+  liquibase:
+    change-log: classpath:db/changelog/changelog.yaml
+  jackson:
+    default-property-inclusion: non_null
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: andrejantonov63@gmail.com
+    password: pscbhpcyfpoupxay
+    properties:
+      mail:
+        debug: false
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  task:
+    execution:
+      pool:
+        core-size: 4
+        max-size: 10
+        queue-capacity: 1000
+        keep-alive: 120s
+  kafka:
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER:localhost:9092}
+      group-id: ${KAFKA_CONSUMER_GROUP_ID:notification-service-default-group}
+      autoOffsetReset: earliest
+    properties:
+      spring.deserializer.value.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: redis_secret_pass

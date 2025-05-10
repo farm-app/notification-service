@@ -1,0 +1,66 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.0'
+    id 'io.spring.dependency-management' version '1.1.7'
+
+    id "io.freefair.lombok" version "8.6"
+}
+
+group = 'ru.rtln.notificationservice'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+ext {
+    lombokMapstructBindingVersion = '0.2.0'
+    postgresqlVersion = '42.6.1'
+    minioVersion = "8.5.5"
+    mapstructVersion = '1.5.5.Final'
+    liquibaseVersion = '4.26.0'
+    hibernateVersion = '6.4.4.Final'
+    queryDslVersion = '5.0.0'
+    jakartaPersistenceVersion = '3.1.0'
+    springdocVersion = '2.0.4'
+    commonVersion = "1.1"
+    springCloudVersion="2023.0.2"
+}
+
+dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
+    implementation "org.springframework.kafka:spring-kafka"
+    implementation "org.springframework.boot:spring-boot-starter-mail"
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation "ru.rtln.common:common:${commonVersion}"
+
+    implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
+    runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
+    annotationProcessor "org.hibernate.orm:hibernate-jpamodelgen:${hibernateVersion}"
+
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
+
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
